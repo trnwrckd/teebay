@@ -23,6 +23,7 @@ const graphqlModels = `
         boughtBy  : String
         lentBy : String
         postedBy : String
+        viewCount : Int
     }
 
     type Query{

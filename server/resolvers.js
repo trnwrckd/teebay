@@ -7,9 +7,12 @@ const resolvers = {
       return prisma.product.findMany();
     },
     product: (_, { id }) => {
-      return prisma.product.findUnique({
+      return prisma.product.update({
         where: {
           id: id,
+        },
+        data: {
+          viewCount: { increment: 1 },
         },
       });
     },
