@@ -4,7 +4,9 @@ const prisma = new PrismaClient();
 const resolvers = {
   Query: {
     products: () => {
-      return prisma.product.findMany();
+      return prisma.product.findMany({
+        include: { purchaseInfo: true, postedByUser: true },
+      });
     },
     product: (_, { id }) => {
       return prisma.product.update({
@@ -13,6 +15,10 @@ const resolvers = {
         },
         data: {
           viewCount: { increment: 1 },
+        },
+        include: {
+          purchaseInfo: true,
+          postedByUser: true,
         },
       });
     },
@@ -23,8 +29,48 @@ const resolvers = {
         },
       });
     },
+    lentProductsByUserId: (_, { id }) => {
+      return prisma.rentedProduct.findMany({
+        where: {
+          productOwner: id,
+        },
+        include: {
+          productDetails: true,
+        },
+      });
+    },
+    borrowedProductsByUserId: (_, { id }) => {
+      return prisma.rentedProduct.findMany({
+        where: {
+          borrowedBy: id,
+        },
+        include: {
+          productDetails: true,
+        },
+      });
+    },
+    soldProductsByUserId: (_, { id }) => {
+      return prisma.soldProduct.findMany({
+        where: {
+          productOwner: id,
+        },
+        include: {
+          productDetails: true,
+        },
+      });
+    },
+    boughtProductsByUserId: (_, { id }) => {
+      return prisma.soldProduct.findMany({
+        where: {
+          boughtBy: id,
+        },
+        include: {
+          productDetails: true,
+        },
+      });
+    },
     users: () => {
-      return prisma.user.findMany();
+      return prisma.user.findMany({ include: { postedProducts: true } });
     },
     user: (_, { id }) => {
       return prisma.user.findUniqueOrThrow({
@@ -90,8 +136,6 @@ const resolvers = {
         price,
         rentPrice,
         rentDuration,
-        boughtBy,
-        lentBy,
         postedBy,
         viewCount,
       }
@@ -104,8 +148,6 @@ const resolvers = {
         price: price,
         rentPrice: rentPrice,
         rentDuration: rentDuration,
-        boughtBy: boughtBy,
-        lentBy: lentBy,
         postedBy: postedBy,
         viewCount: viewCount,
       };
@@ -121,6 +163,22 @@ const resolvers = {
       return prisma.product.delete({
         where: {
           id: id,
+        },
+      });
+    },
+
+    // purchase product
+    purchaseProduct: (_, { productId, productOwner, boughtBy }) => {
+      const product = {
+        productId: productId,
+        productOwner: productOwner,
+        boughtBy: boughtBy,
+      };
+
+      return prisma.soldProduct.create({
+        data: product,
+        include: {
+          productDetails: true,
         },
       });
     },

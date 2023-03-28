@@ -7,8 +7,6 @@ const graphqlModels = `
         email : String
         phone : String
         password : String
-        boughtProducts : [Product]
-        lentProducts : [Product]
         postedProducts : [Product]
     }
 
@@ -20,10 +18,27 @@ const graphqlModels = `
         price : Int
         rentPrice  : Int
         rentDuration  : String
-        boughtBy  : String
-        lentBy : String
+        purchaseInfo : SoldProduct
+        rentInfo: RentedProduct 
+        postedByUser: User
         postedBy : String
         viewCount : Int
+    }
+
+    type RentedProduct{
+        id : String
+        borrowedBy : String
+        productId : String
+        productOwner: String
+        productDetails: Product
+    }
+
+    type SoldProduct{
+        id : String
+        boughtBy : String
+        productId : String
+        productOwner: String
+        productDetails: Product
     }
 
     type Query{
@@ -32,13 +47,22 @@ const graphqlModels = `
         users: [User]
         user(id : String!): User
         productsByUserId (id: String) : [Product]
+        soldProductsByUserId (id: String) : [SoldProduct]
+        boughtProductsByUserId (id: String) : [SoldProduct]
+        lentProductsByUserId (id: String) : RentedProduct
+        borrowedProductsByUserId (id: String) : RentedProduct
     }
 
     type Mutation{
         createUser(firstName : String, lastName : String, address: String, email : String, phone : String, password : String) : User
+
         createProduct(title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String, boughtBy : String, lentBy : String, postedBy : String, viewCount : Int) : Product
+
         updateProduct(id : String, title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String, boughtBy : String, lentBy : String, postedBy : String, viewCount : Int) : Product
+
         deleteProduct(id: String) : Product
+
+        purchaseProduct(productId: String, productOwner: String, boughtBy: String) : SoldProduct
     }
 `;
 

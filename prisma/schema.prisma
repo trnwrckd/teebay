@@ -32,11 +32,10 @@ model Product {
   rentDuration String
   viewCount Int @default(0)
   
-  purchaseInfo SoldProduct ? @relation("purchaseInfo", fields : [isProductBought] , references: [id])
-  isProductBought String ? @unique
+  purchaseInfo SoldProduct ? @relation("purchaseInfo")
+  rentInfo RentedProduct ? @relation("rentInfo")
 
-  rentInfo RentedProduct ? @relation("rentInfo", fields : [isProductRented] , references: [id])
-  isProductRented String ? @unique
+  // rentedProduct RentedProduct ? @relation("rentedProduct", fields: [rentInfo], references: [id])
 
   postedByUser User  @relation("postedBy" , fields: [postedBy] , references: [id])
   postedBy String
@@ -44,14 +43,16 @@ model Product {
 
 model RentedProduct{
   id String @id @default(uuid()) 
-  product Product ? @relation("rentInfo")
+  productId String @unique
+  productDetails Product ? @relation("rentInfo", fields: [productId], references: [id])
   productOwner String
   borrowedBy String
   // rentDuration String
 }
 model SoldProduct{
-  id String @id @default(uuid()) 
-  product Product ? @relation("purchaseInfo")
+  id String @id @default(uuid())
+  productId String @unique
+  productDetails Product ? @relation("purchaseInfo", fields: [productId], references: [id])
   productOwner String
   boughtBy String
 }
