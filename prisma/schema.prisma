@@ -19,8 +19,6 @@ model User {
   phone String
   password String
 
-  boughtProducts Product[] @relation("boughtBy")
-  lentProducts Product[] @relation("lentBy")
   postedProducts Product[] @relation("postedBy")
 }
 
@@ -34,10 +32,26 @@ model Product {
   rentDuration String
   viewCount Int @default(0)
   
-  boughtByUser User ? @relation("boughtBy" , fields: [boughtBy] , references: [id])
-  boughtBy String ?  
-  lentByUser User ? @relation("lentBy" , fields: [lentBy] , references: [id])
-  lentBy String ? 
+  purchaseInfo SoldProduct ? @relation("purchaseInfo", fields : [isProductBought] , references: [id])
+  isProductBought String ? @unique
+
+  rentInfo RentedProduct ? @relation("rentInfo", fields : [isProductRented] , references: [id])
+  isProductRented String ? @unique
+
   postedByUser User  @relation("postedBy" , fields: [postedBy] , references: [id])
-  postedBy String 
+  postedBy String
+}
+
+model RentedProduct{
+  id String @id @default(uuid()) 
+  product Product ? @relation("rentInfo")
+  productOwner String
+  borrowedBy String
+  // rentDuration String
+}
+model SoldProduct{
+  id String @id @default(uuid()) 
+  product Product ? @relation("purchaseInfo")
+  productOwner String
+  boughtBy String
 }

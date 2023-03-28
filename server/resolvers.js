@@ -16,6 +16,13 @@ const resolvers = {
         },
       });
     },
+    productsByUserId: (_, { id }) => {
+      return prisma.product.findMany({
+        where: {
+          postedBy: id,
+        },
+      });
+    },
     users: () => {
       return prisma.user.findMany();
     },
@@ -39,11 +46,83 @@ const resolvers = {
         password: password,
         address: address,
         phone: phone,
-        // boughtProducts: [],
-        // lentProducts: [],
-        // postedProducts: [],
       };
       return prisma.user.create({ data: user });
+    },
+    //create product
+    createProduct: (
+      _,
+      {
+        title,
+        categories,
+        description,
+        price,
+        rentPrice,
+        rentDuration,
+        boughtBy,
+        lentBy,
+        postedBy,
+      }
+    ) => {
+      const body = {
+        title: title,
+        categories: categories,
+        description: description,
+        price: price,
+        rentPrice: rentPrice,
+        rentDuration: rentDuration,
+        boughtBy: boughtBy,
+        lentBy: lentBy,
+        postedBy: postedBy,
+        viewCount: 0,
+      };
+
+      return prisma.product.create({ data: body });
+    },
+    //update product
+    updateProduct: (
+      _,
+      {
+        id,
+        title,
+        categories,
+        description,
+        price,
+        rentPrice,
+        rentDuration,
+        boughtBy,
+        lentBy,
+        postedBy,
+        viewCount,
+      }
+    ) => {
+      const body = {
+        id: id,
+        title: title,
+        categories: categories,
+        description: description,
+        price: price,
+        rentPrice: rentPrice,
+        rentDuration: rentDuration,
+        boughtBy: boughtBy,
+        lentBy: lentBy,
+        postedBy: postedBy,
+        viewCount: viewCount,
+      };
+      return prisma.product.update({
+        where: {
+          id: id,
+        },
+        data: body,
+      });
+    },
+    //delete product
+    deleteProduct: (_, { id }) => {
+      return prisma.product.delete({
+        where: {
+          id: id,
+        },
+      });
     },
   },
 };
