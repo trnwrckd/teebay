@@ -35,8 +35,6 @@ model Product {
   purchaseInfo SoldProduct ? @relation("purchaseInfo")
   rentInfo RentedProduct ? @relation("rentInfo")
 
-  // rentedProduct RentedProduct ? @relation("rentedProduct", fields: [rentInfo], references: [id])
-
   postedByUser User  @relation("postedBy" , fields: [postedBy] , references: [id])
   postedBy String
 }

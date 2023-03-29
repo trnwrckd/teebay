@@ -46,6 +46,7 @@ const graphqlModels = `
         product(id: String!): Product
         users: [User]
         user(id : String!): User
+        login(email: String, password: String) : User
         productsByUserId (id: String) : [Product]
         soldProductsByUserId (id: String) : [SoldProduct]
         boughtProductsByUserId (id: String) : [SoldProduct]

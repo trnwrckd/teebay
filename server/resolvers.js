@@ -69,6 +69,17 @@ const resolvers = {
         },
       });
     },
+    login: async (_, { email, password }) => {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
+
+      if (!user) throw new Error('No User found with email');
+      if (user.password !== password) throw new Error('Invalid password');
+      return user;
+    },
     users: () => {
       return prisma.user.findMany({ include: { postedProducts: true } });
     },
