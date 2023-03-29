@@ -4,6 +4,8 @@ import ProtectedRoute from './ProtectedRoute';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import NotFound from './pages/NotFound';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import { useState } from 'react';
 
@@ -39,6 +41,11 @@ function App() {
                 }
               />
               <Route path='/login' element={<Login setUser={setUser} />} />
+              <Route
+                path='/register'
+                element={<Register setUser={setUser} />}
+              />
+              <Route path='*' element={<NotFound />} />
             </Routes>
           </Box>
         </Router>

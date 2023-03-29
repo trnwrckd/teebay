@@ -1,7 +1,8 @@
 import React from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { Button, TextField } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,8 +32,8 @@ export default function Login({ setUser }) {
 
   const formik = useFormik({
     initialValues: {
-      email: 'trnwrckd@gmail.com',
-      password: '123456',
+      email: '',
+      password: '',
     },
     validationSchema: validationSchema,
     onSubmit: values => {
@@ -48,34 +49,50 @@ export default function Login({ setUser }) {
 
   return (
     <>
-      <div>
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            id='email'
-            name='email'
-            label='Email'
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-          <TextField
-            fullWidth
-            id='password'
-            name='password'
-            label='Password'
-            type='password'
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-          />
-          <Button color='primary' variant='contained' fullWidth type='submit'>
-            Submit
-          </Button>
-        </form>
-      </div>
+      <Box sx={{ width: '50%', mx: 'auto' }}>
+        <Typography variant='h4' sx={{ textAlign: 'center', mb: 2 }}>
+          {' '}
+          Log In
+        </Typography>
+        <Box sx={{ px: 3, py: 5, border: '1px solid lightgrey' }}>
+          <form onSubmit={formik.handleSubmit}>
+            <TextField
+              sx={{ mb: 4 }}
+              fullWidth
+              id='email'
+              name='email'
+              label='Email'
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+            />
+            <TextField
+              sx={{ mb: 4 }}
+              fullWidth
+              id='password'
+              name='password'
+              label='Password'
+              type='password'
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+              <Button color='primary' variant='contained' type='submit'>
+                Submit
+              </Button>
+            </Box>
+            <Typography variant='body1' sx={{ textAlign: 'center' }}>
+              Don't have an account?{' '}
+              <Link to='/register' style={{ textDecoration: 'none' }}>
+                Sign Up
+              </Link>
+            </Typography>
+          </form>
+        </Box>
+      </Box>
       {loading && <p>Loading</p>}
       {error && <p>Incorrect Credentials</p>}
     </>
