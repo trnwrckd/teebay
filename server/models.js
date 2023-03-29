@@ -46,19 +46,20 @@ const graphqlModels = `
         product(id: String!): Product
         users: [User]
         user(id : String!): User
-        login(email: String, password: String) : User
         productsByUserId (id: String) : [Product]
         soldProductsByUserId (id: String) : [SoldProduct]
         boughtProductsByUserId (id: String) : [SoldProduct]
         lentProductsByUserId (id: String) : RentedProduct
         borrowedProductsByUserId (id: String) : RentedProduct
     }
-
+    
     type Mutation{
+        login(email: String, password: String) : User
+        
         createUser(firstName : String, lastName : String, address: String, email : String, phone : String, password : String) : User
-
+        
         createProduct(title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String, boughtBy : String, lentBy : String, postedBy : String, viewCount : Int) : Product
-
+        
         updateProduct(id : String, title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String, boughtBy : String, lentBy : String, postedBy : String, viewCount : Int) : Product
 
         deleteProduct(id: String) : Product
