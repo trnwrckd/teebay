@@ -5,7 +5,7 @@ const resolvers = {
   Query: {
     products: () => {
       return prisma.product.findMany({
-        include: { purchaseInfo: true, postedByUser: true },
+        include: { purchaseInfo: true, postedByUser: true, rentInfo: true },
       });
     },
     product: (_, { id }) => {
@@ -18,6 +18,7 @@ const resolvers = {
         },
         include: {
           purchaseInfo: true,
+          rentInfo: true,
           postedByUser: true,
         },
       });
@@ -27,12 +28,19 @@ const resolvers = {
         where: {
           postedBy: id,
         },
+        include: {
+          purchaseInfo: true,
+          rentInfo: true,
+        },
       });
     },
     lentProductsByUserId: (_, { id }) => {
       return prisma.rentedProduct.findMany({
         where: {
           productOwner: id,
+          borrowedBy: {
+            not: id,
+          },
         },
         include: {
           productDetails: true,
@@ -43,6 +51,9 @@ const resolvers = {
       return prisma.rentedProduct.findMany({
         where: {
           borrowedBy: id,
+          productOwner: {
+            not: id,
+          },
         },
         include: {
           productDetails: true,
@@ -187,6 +198,22 @@ const resolvers = {
       };
 
       return prisma.soldProduct.create({
+        data: product,
+        include: {
+          productDetails: true,
+        },
+      });
+    },
+
+    //rent product
+    rentProduct: (_, { productId, productOwner, borrowedBy }) => {
+      const product = {
+        productId: productId,
+        productOwner: productOwner,
+        borrowedBy: borrowedBy,
+      };
+
+      return prisma.rentedProduct.create({
         data: product,
         include: {
           productDetails: true,

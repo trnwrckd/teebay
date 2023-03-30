@@ -53,8 +53,8 @@ const graphqlModels = `
         productsByUserId (id: String) : [Product]
         soldProductsByUserId (id: String) : [SoldProduct]
         boughtProductsByUserId (id: String) : [SoldProduct]
-        lentProductsByUserId (id: String) : RentedProduct
-        borrowedProductsByUserId (id: String) : RentedProduct
+        lentProductsByUserId (id: String) : [RentedProduct]
+        borrowedProductsByUserId (id: String) : [RentedProduct]
     }
     
     type Mutation{
@@ -69,6 +69,8 @@ const graphqlModels = `
         deleteProduct(id: String) : Product
 
         purchaseProduct(productId: String, productOwner: String, boughtBy: String) : SoldProduct
+        
+        rentProduct(productId: String, productOwner: String, borrowedBy: String) : RentedProduct
     }
 `;
 

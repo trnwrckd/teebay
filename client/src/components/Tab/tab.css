@@ -1,0 +1,14 @@
+.tab,
+.tab-active {
+  width: 100%;
+  font-size: 1.2em;
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-active {
+  border-bottom: 2px solid crimson;
+}

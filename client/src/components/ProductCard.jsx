@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, ownProduct = false }) {
   const {
     id,
     title,
@@ -14,7 +14,7 @@ export default function ProductCard({ product }) {
     createdAt,
   } = product;
 
-  if (!purchaseInfo && !rentInfo) {
+  if ((!purchaseInfo && !rentInfo) || ownProduct) {
     return (
       <Box sx={{ p: 3, border: '1px solid lightgrey' }}>
         <Typography variant='h4'>{title}</Typography>
@@ -23,7 +23,7 @@ export default function ProductCard({ product }) {
         </Typography>
         <Typography variant='body1'>Price: ${price}</Typography>
         <Typography variant='body1'>
-          {description.length > 100 ? (
+          {description && description.length > 100 ? (
             <>
               ${description.substr(0, 100)}
               <span style={{ color: 'lightBlue' }}>... More Details</span>

@@ -25,8 +25,13 @@ export default function Header({ user, setUser }) {
       </div>
       {user ? (
         <div>
-          <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
-            <Typography variant='body1'>My Products</Typography>
+          <Link
+            to='/myproducts'
+            style={{ color: 'inherit', textDecoration: 'none' }}
+          >
+            <Typography variant='body1' sx={{ fontSize: '1.2em' }}>
+              My Products
+            </Typography>
           </Link>
         </div>
       ) : null}

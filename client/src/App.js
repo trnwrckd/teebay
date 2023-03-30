@@ -6,16 +6,22 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
+import MyProducts from './pages/MyProducts';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
-  const [user, setUser] = useState(null);
+  const userFromLocalStorage = JSON.parse(localStorage.getItem('userId'));
+  const [user, setUser] = useState(userFromLocalStorage);
 
   const client = new ApolloClient({
     uri: 'http://localhost:5000/graphql',
     cache: new InMemoryCache(),
   });
+
+  useEffect(() => {
+    localStorage.setItem('userId', JSON.stringify(user));
+  }, [user]);
 
   return (
     <>
@@ -29,6 +35,14 @@ function App() {
                 element={
                   <ProtectedRoute user={user}>
                     <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/myproducts'
+                element={
+                  <ProtectedRoute user={user}>
+                    <MyProducts />
                   </ProtectedRoute>
                 }
               />
