@@ -17,14 +17,12 @@ export default function MyProducts() {
   const [products, setProducts] = useState([]);
 
   const userId = JSON.parse(localStorage.getItem('userId'));
-  console.log(userId);
 
   const { loading, error, data } = useQuery(query, {
     variables: { userId },
   });
 
   useEffect(() => {
-    setProducts([]);
     if (tab === 'Posted By Me') setQuery(GET_PRODUCTS_BY_USER_ID);
     if (tab === 'Bought') setQuery(GET_BOUGHT_PRODUCTS_BY_USER_ID);
     if (tab === 'Sold') setQuery(GET_SOLD_PRODUCTS_BY_USER_ID);
@@ -34,6 +32,7 @@ export default function MyProducts() {
   }, [tab]);
 
   useEffect(() => {
+    setProducts([]);
     if (data) {
       if (data.productsByUserId) setProducts(data.productsByUserId);
       if (data.boughtProductsByUserId) setProducts(data.boughtProductsByUserId);

@@ -47,9 +47,9 @@ const graphqlModels = `
 
     type Query{
         products: [Product]
-        product(id: String!): Product
+        product(id: String): Product
         users: [User]
-        user(id : String!): User
+        user(id : String): User
         productsByUserId (id: String) : [Product]
         soldProductsByUserId (id: String) : [SoldProduct]
         boughtProductsByUserId (id: String) : [SoldProduct]

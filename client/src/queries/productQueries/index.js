@@ -26,6 +26,33 @@ const GET_ALL_PRODUCTS = gql`
   }
 `;
 
+const GET_PRODUCT_BY_ID = gql`
+  query getProductById($id: String) {
+    product(id: $id) {
+      id
+      title
+      categories
+      description
+      price
+      rentPrice
+      rentDuration
+      createdAt
+      purchaseInfo {
+        id
+      }
+      rentInfo {
+        id
+      }
+      postedByUser {
+        id
+        firstName
+        lastName
+      }
+      viewCount
+    }
+  }
+`;
+
 const GET_PRODUCTS_BY_USER_ID = gql`
   query getProductsByUserId($id: String) {
     productsByUserId(id: $id) {
@@ -92,6 +119,9 @@ const GET_SOLD_PRODUCTS_BY_USER_ID = gql`
 const GET_LENT_PRODUCTS_BY_USER_ID = gql`
   query getLentProductsByUserId($id: String) {
     lentProductsByUserId(id: $id) {
+      id
+      borrowedBy
+      productOwner
       productDetails {
         id
         title
@@ -110,6 +140,9 @@ const GET_LENT_PRODUCTS_BY_USER_ID = gql`
 const GET_BORROWED_PRODUCTS_BY_USER_ID = gql`
   query getBorrowedProductsByUserId($id: String) {
     borrowedProductsByUserId(id: $id) {
+      id
+      borrowedBy
+      productOwner
       productDetails {
         id
         title
@@ -127,6 +160,7 @@ const GET_BORROWED_PRODUCTS_BY_USER_ID = gql`
 
 export {
   GET_ALL_PRODUCTS,
+  GET_PRODUCT_BY_ID,
   GET_PRODUCTS_BY_USER_ID,
   GET_BOUGHT_PRODUCTS_BY_USER_ID,
   GET_SOLD_PRODUCTS_BY_USER_ID,

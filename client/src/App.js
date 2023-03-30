@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import MyProducts from './pages/MyProducts';
+import Product from './pages/Product';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import { useState, useEffect } from 'react';
 
@@ -39,18 +40,26 @@ function App() {
                 }
               />
               <Route
-                path='/myproducts'
-                element={
-                  <ProtectedRoute user={user}>
-                    <MyProducts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path='/home'
                 element={
                   <ProtectedRoute user={user}>
                     <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/product/:id'
+                element={
+                  <ProtectedRoute user={user}>
+                    <Product />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/myproducts'
+                element={
+                  <ProtectedRoute user={user}>
+                    <MyProducts />
                   </ProtectedRoute>
                 }
               />

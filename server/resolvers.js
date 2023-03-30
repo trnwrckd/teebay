@@ -38,9 +38,6 @@ const resolvers = {
       return prisma.rentedProduct.findMany({
         where: {
           productOwner: id,
-          borrowedBy: {
-            not: id,
-          },
         },
         include: {
           productDetails: true,
@@ -51,9 +48,6 @@ const resolvers = {
       return prisma.rentedProduct.findMany({
         where: {
           borrowedBy: id,
-          productOwner: {
-            not: id,
-          },
         },
         include: {
           productDetails: true,
