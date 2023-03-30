@@ -36,16 +36,7 @@ export default function Product() {
             Categories: {categories ? categories.join(', ') : 'None'}
           </Typography>
           <Typography variant='body1'>Price: ${price}</Typography>
-          <Typography variant='body1'>
-            {description && description.length > 100 ? (
-              <>
-                ${description.substr(0, 100)}
-                <span style={{ color: 'lightBlue' }}>... More Details</span>
-              </>
-            ) : (
-              description
-            )}
-          </Typography>
+          <Typography variant='body1'>{description}</Typography>
           <Box
             sx={{
               display: 'flex',

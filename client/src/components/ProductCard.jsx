@@ -27,6 +27,7 @@ export default function ProductCard({ product, ownProduct = false }) {
     rentInfo,
     createdAt,
   } = product;
+
   const deleteBtn = useRef(null);
   const deleteModal = useRef(null);
 
@@ -44,10 +45,11 @@ export default function ProductCard({ product, ownProduct = false }) {
       <Link
         to={!ownProduct ? `/product/${id}` : `/editProduct/${id}`}
         onClick={e => {
-          if (deleteBtn.current.contains(e.target)) {
+          if (deleteBtn.current && deleteBtn.current.contains(e.target)) {
             e.preventDefault();
             e.stopPropagation();
           } else if (
+            deleteModal &&
             deleteModal.current &&
             deleteModal.current.contains(e.target)
           ) {

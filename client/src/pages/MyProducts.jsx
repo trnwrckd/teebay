@@ -19,7 +19,7 @@ export default function MyProducts() {
   const userId = JSON.parse(localStorage.getItem('userId'));
 
   const { loading, error, data } = useQuery(query, {
-    variables: { userId },
+    variables: { id: userId },
   });
 
   useEffect(() => {
@@ -32,7 +32,6 @@ export default function MyProducts() {
   }, [tab]);
 
   useEffect(() => {
-    setProducts([]);
     if (data) {
       if (data.productsByUserId) setProducts(data.productsByUserId);
       if (data.boughtProductsByUserId) setProducts(data.boughtProductsByUserId);

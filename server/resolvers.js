@@ -31,6 +31,7 @@ const resolvers = {
         include: {
           purchaseInfo: true,
           rentInfo: true,
+          postedByUser: true,
         },
       });
     },
@@ -121,8 +122,6 @@ const resolvers = {
         price,
         rentPrice,
         rentDuration,
-        boughtBy,
-        lentBy,
         postedBy,
       }
     ) => {
@@ -133,8 +132,6 @@ const resolvers = {
         price: price,
         rentPrice: rentPrice,
         rentDuration: rentDuration,
-        boughtBy: boughtBy,
-        lentBy: lentBy,
         postedBy: postedBy,
         viewCount: 0,
       };

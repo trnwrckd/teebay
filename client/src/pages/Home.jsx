@@ -7,20 +7,20 @@ import ProductCard from '../components/ProductCard';
 export default function Home() {
   const { loading, error, data } = useQuery(GET_ALL_PRODUCTS);
 
-  if (loading) return <p>Loading</p>;
-  else if (error) return <p>Something went wrong</p>;
-  else if (!loading && !error && data) {
-    return (
-      <>
-        <Typography variant='h2' sx={{ textAlign: 'center', mb: 3 }}>
-          All Products
-        </Typography>
-        <div>
-          {data.products.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </>
-    );
-  }
+  return (
+    <>
+      <Typography variant='h2' sx={{ textAlign: 'center', mb: 3 }}>
+        All Products
+      </Typography>
+      <div>
+        {loading ? <p>Loading</p> : null}
+        {error ? <p>Error</p> : null}
+        {!loading && !error && data
+          ? data.products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))
+          : null}
+      </div>
+    </>
+  );
 }

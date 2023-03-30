@@ -62,9 +62,9 @@ const graphqlModels = `
         
         createUser(firstName : String, lastName : String, address: String, email : String, phone : String, password : String) : User
         
-        createProduct(title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String, boughtBy : String, lentBy : String, postedBy : String, viewCount : Int) : Product
+        createProduct(title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String, postedBy : String, viewCount : Int) : Product
         
-        updateProduct(id : String, title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String, boughtBy : String, lentBy : String, postedBy : String, viewCount : Int) : Product
+        updateProduct(id : String, title : String, categories : [String], description : String, price : Int, rentPrice : Int, rentDuration : String) : Product
 
         deleteProduct(id: String) : Product
 
