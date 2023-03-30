@@ -1,4 +1,7 @@
 const graphqlModels = `
+
+    scalar DateTime
+
     type User{
         id : ID
         firstName : String 
@@ -18,6 +21,7 @@ const graphqlModels = `
         price : Int
         rentPrice  : Int
         rentDuration  : String
+        createdAt: DateTime
         purchaseInfo : SoldProduct
         rentInfo: RentedProduct 
         postedByUser: User

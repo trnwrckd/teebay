@@ -21,6 +21,7 @@ const GET_ALL_PRODUCTS = gql`
         lastName
       }
       viewCount
+      createdAt
     }
   }
 `;

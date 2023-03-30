@@ -12,7 +12,7 @@ export default function Home() {
   else if (!loading && !error && data) {
     return (
       <>
-        <Typography variant='h2' sx={{ textAlign: 'center' }}>
+        <Typography variant='h2' sx={{ textAlign: 'center', mb: 3 }}>
           All Products
         </Typography>
         <div>
