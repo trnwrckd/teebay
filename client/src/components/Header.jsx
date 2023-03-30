@@ -23,6 +23,13 @@ export default function Header({ user, setUser }) {
           <Typography variant='h4'>TeeBay</Typography>
         </Link>
       </div>
+      {user ? (
+        <div>
+          <Link to='/' style={{ color: 'inherit', textDecoration: 'none' }}>
+            <Typography variant='body1'>My Products</Typography>
+          </Link>
+        </div>
+      ) : null}
       <Box>
         {!user ? (
           <Link

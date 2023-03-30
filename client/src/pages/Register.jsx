@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
 import {
@@ -11,52 +10,11 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
-
-const REGISTER = gql`
-  mutation Register(
-    $firstName: String
-    $lastName: String
-    $address: String
-    $email: String
-    $phone: String
-    $password: String
-  ) {
-    createUser(
-      firstName: $firstName
-      lastName: $lastName
-      address: $address
-      email: $email
-      phone: $phone
-      password: $password
-    ) {
-      id
-    }
-  }
-`;
-
-const validationSchema = yup.object({
-  firstName: yup
-    .string('Enter your first name')
-    .required('First name is required'),
-  lastName: yup
-    .string('Enter your last name')
-    .required('Last name is required'),
-  address: yup.string('Enter your address').required('Address is required'),
-  phone: yup
-    .string('Enter your phone number')
-    .required('Phone number is required'),
-  password: yup
-    .string('Enter your password')
-    .min(6, 'Password should be of minimum 6 characters length')
-    .required('Password is required'),
-  confirmPassword: yup
-    .string('Enter your password')
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Field must not be empty'),
-});
+import { REGISTER } from '../mutations/userMutations';
+import { registerSchema } from '../validators';
 
 export default function Register({ setUser }) {
   const [register, { loading, error }] = useMutation(REGISTER);
@@ -83,7 +41,7 @@ export default function Register({ setUser }) {
       password: '',
       confirmPassword: '',
     },
-    validationSchema: validationSchema,
+    validationSchema: registerSchema,
     onSubmit: values => {
       register({
         variables: {

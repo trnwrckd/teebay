@@ -1,30 +1,11 @@
 import React from 'react';
-import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-
-const LOGIN = gql`
-  mutation Login($email: String, $password: String) {
-    login(email: $email, password: $password) {
-      id
-      email
-    }
-  }
-`;
-
-const validationSchema = yup.object({
-  email: yup
-    .string('Enter your email')
-    .email('Enter a valid email')
-    .required('Email is required'),
-  password: yup
-    .string('Enter your password')
-    .min(6, 'Password should be of minimum 6 characters length')
-    .required('Password is required'),
-});
+import { LOGIN } from '../mutations/userMutations';
+import { loginSchema } from '../validators/index';
 
 export default function Login({ setUser }) {
   const [login, { loading, error }] = useMutation(LOGIN);
@@ -35,7 +16,7 @@ export default function Login({ setUser }) {
       email: '',
       password: '',
     },
-    validationSchema: validationSchema,
+    validationSchema: loginSchema,
     onSubmit: values => {
       login({
         variables: { email: values.email, password: values.password },
