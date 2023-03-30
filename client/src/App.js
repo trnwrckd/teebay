@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import MyProducts from './pages/MyProducts';
 import Product from './pages/Product';
+import EditProduct from './pages/EditProduct';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import { useState, useEffect } from 'react';
 
@@ -52,6 +53,14 @@ function App() {
                 element={
                   <ProtectedRoute user={user}>
                     <Product />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/editproduct/:id'
+                element={
+                  <ProtectedRoute user={user}>
+                    <EditProduct />
                   </ProtectedRoute>
                 }
               />

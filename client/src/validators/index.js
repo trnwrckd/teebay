@@ -31,4 +31,22 @@ const registerSchema = yup.object({
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     .required('Field must not be empty'),
 });
-export { loginSchema, registerSchema };
+
+const productSchema = yup.object({
+  title: yup
+    .string('Enter product title')
+    .required('Product title is required'),
+  description: yup
+    .string('Enter product description')
+    .required('Product Description is required'),
+  categories: yup
+    .array(yup.string().required())
+    .min(1, 'Product category is required'),
+  price: yup.string('Enter product price').required('Price is required'),
+  rentPrice: yup.string('Enter rent price').required('Rent price is required'),
+  rentDuration: yup
+    .string('Enter rent duration')
+    .required('Rent duration is required'),
+});
+
+export { loginSchema, registerSchema, productSchema };

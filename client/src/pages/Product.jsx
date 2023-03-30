@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCT_BY_ID } from '../queries/productQueries';
-import { Box, Typography, Button } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from '@mui/material';
+
+import { useMutation } from '@apollo/client';
+import { PURCHASE_PRODUCT, RENT_PRODUCT } from '../mutations/productMutations';
 
 export default function Product() {
   const { id } = useParams();
@@ -10,6 +22,13 @@ export default function Product() {
   const { loading, error, data } = useQuery(GET_PRODUCT_BY_ID, {
     variables: { id },
   });
+
+  const [buyModalOpen, setBuyModalOpen] = useState(false);
+  const [rentModalOpen, setRentModalOpen] = useState(false);
+
+  const [purchaseProduct] = useMutation(PURCHASE_PRODUCT);
+  const [rentProduct] = useMutation(RENT_PRODUCT);
+
   if (loading) return <p>Loading</p>;
   if (error) return <p>return</p>;
 
@@ -25,8 +44,6 @@ export default function Product() {
       rentInfo,
       postedByUser,
     } = data.product;
-
-    console.log(postedByUser);
 
     return (
       <>
@@ -48,10 +65,88 @@ export default function Product() {
             <Typography variant='body1'>{viewCount} views</Typography>
           </Box>
           {!purchaseInfo && !rentInfo && postedByUser.id !== userId ? (
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button variant='primary'>Buy</Button>
-              <Button variant='secondary'>Rent</Button>
-            </Box>
+            <>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button variant='primary' onClick={() => setBuyModalOpen(true)}>
+                  Buy
+                </Button>
+                <Button
+                  variant='secondary'
+                  onClick={() => setRentModalOpen(true)}
+                >
+                  Rent
+                </Button>
+              </Box>
+              {/* buy modal */}
+              <Dialog
+                open={buyModalOpen}
+                onClose={() => setBuyModalOpen(false)}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>
+                  Are you sure you want to buy this product?
+                </DialogTitle>
+                <DialogActions>
+                  <Button onClick={() => setBuyModalOpen(false)}>No</Button>
+                  <Button
+                    onClick={() =>
+                      purchaseProduct({
+                        variables: {
+                          productId: id,
+                          productOwner: postedByUser.id,
+                          boughtBy: userId,
+                        },
+                        onCompleted: () => {
+                          setBuyModalOpen(false);
+                        },
+                      })
+                    }
+                    autoFocus
+                  >
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              {/* rent modal */}
+              <Dialog
+                open={rentModalOpen}
+                onClose={() => setRentModalOpen(false)}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>
+                  Are you sure you want to buy this product?
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id='alert-dialog-description'>
+                    This action is irreversible.
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setRentModalOpen(false)}>
+                    Go Back
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      rentProduct({
+                        variables: {
+                          productId: id,
+                          productOwner: postedByUser.id,
+                          borrowedBy: userId,
+                        },
+                        onCompleted: () => {
+                          setRentModalOpen(false);
+                        },
+                      })
+                    }
+                    autoFocus
+                  >
+                    Confirm Rent
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </>
           ) : null}
         </Box>
       </>
