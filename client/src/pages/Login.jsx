@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
 import {
@@ -7,7 +7,11 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN } from '../mutations/userMutations';
@@ -16,6 +20,8 @@ import { loginSchema } from '../validators/index';
 export default function Login({ setUser }) {
   const [login, { loading, error }] = useMutation(LOGIN);
   const navigate = useNavigate();
+
+  const [showPass, setShowPass] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -60,10 +66,28 @@ export default function Login({ setUser }) {
               id='password'
               name='password'
               label='Password'
-              type='password'
+              type={showPass ? 'text' : 'password'}
               value={formik.values.password}
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
+              InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          onClick={() => setShowPass(!showPass)}
+                          onMouseDown={() =>
+                            setShowPass(!showPass)
+                          }
+                        >
+                          {showPass ? (
+                            <AiFillEyeInvisible />
+                          ) : (
+                            <AiFillEye />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
               helperText={formik.touched.password && formik.errors.password}
             />
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>

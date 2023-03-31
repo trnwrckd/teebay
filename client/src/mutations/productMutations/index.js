@@ -1,5 +1,31 @@
 import { gql } from '@apollo/client';
 
+const CREATE_PRODUCT = gql`
+  mutation createProduct(
+    $title: String
+    $categories: [String]
+    $description: String
+    $price: Int
+    $rentPrice: Int
+    $rentDuration: String
+    $postedBy: String
+    $viewCount: Int
+  ) {
+    createProduct(
+      title: $title
+      categories: $categories
+      description: $description
+      price: $price
+      rentPrice: $rentPrice
+      rentDuration: $rentDuration
+      postedBy: $postedBy
+      viewCount: $viewCount
+    ) {
+      id
+    }
+  }
+`;
+
 const DELETE_PRODUCT = gql`
   mutation deleteProduct($id: String) {
     deleteProduct(id: $id) {
@@ -64,4 +90,10 @@ const UPDATE_PRODUCT = gql`
   }
 `;
 
-export { DELETE_PRODUCT, PURCHASE_PRODUCT, RENT_PRODUCT, UPDATE_PRODUCT };
+export {
+  CREATE_PRODUCT,
+  DELETE_PRODUCT,
+  PURCHASE_PRODUCT,
+  RENT_PRODUCT,
+  UPDATE_PRODUCT,
+};

@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import MyProducts from './pages/MyProducts';
 import Product from './pages/Product';
 import EditProduct from './pages/EditProduct';
+import CreateProduct from './pages/CreateProduct';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import { useState, useEffect } from 'react';
 
@@ -21,6 +22,11 @@ function App() {
       Query: {
         fields: {
           products: {
+            merge(existing, incoming) {
+              return incoming;
+            },
+          },
+          productsByUserId: {
             merge(existing, incoming) {
               return incoming;
             },
@@ -67,6 +73,14 @@ function App() {
                 element={
                   <ProtectedRoute user={user}>
                     <Product />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/createProduct'
+                element={
+                  <ProtectedRoute user={user}>
+                    <CreateProduct />
                   </ProtectedRoute>
                 }
               />

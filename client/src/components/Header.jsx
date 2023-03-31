@@ -23,36 +23,43 @@ export default function Header({ user, setUser }) {
           <Typography variant='h4'>TeeBay</Typography>
         </Link>
       </div>
-      {user ? (
-        <div>
-          <Link
-            to='/myproducts'
-            style={{ color: 'inherit', textDecoration: 'none' }}
-          >
-            <Typography variant='body1' sx={{ fontSize: '1.2em' }}>
-              My Products
-            </Typography>
-          </Link>
-        </div>
-      ) : null}
       <Box>
         {!user ? (
           <Link
             to='/login'
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
-            <Button variant='outlined' sx={{ color: 'black' }}>
-              Login
+            <Button variant='contained' color='primary'>
+              Log In
             </Button>
           </Link>
         ) : (
-          <Button
-            variant='outlined'
-            sx={{ color: 'black' }}
-            onClick={handleLogout}
-          >
-            Log out
-          </Button>
+          <>
+            <Link
+              to='/myproducts'
+              style={{ color: 'inherit', textDecoration: 'none' }}
+            >
+              <Button variant='contained' color='success'>
+                My Products
+              </Button>
+            </Link>
+            <Link
+              to='/createProduct'
+              style={{ color: 'inherit', textDecoration: 'none' }}
+            >
+              <Button sx={{ ml: 2 }} variant='contained' color='primary'>
+                Create Product
+              </Button>
+            </Link>
+            <Button
+              sx={{ ml: 2 }}
+              variant='contained'
+              color='error'
+              onClick={handleLogout}
+            >
+              Log out
+            </Button>
+          </>
         )}
       </Box>
     </Box>

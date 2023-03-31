@@ -16,9 +16,9 @@ import { BsFillTrashFill } from 'react-icons/bs';
 import { useMutation } from '@apollo/client';
 import { DELETE_PRODUCT } from '../mutations/productMutations';
 import { getRentDurationInString } from '../utils/getRentDurationInString';
-import { GET_ALL_PRODUCTS } from '../queries/productQueries';
+import { GET_PRODUCTS_BY_USER_ID } from '../queries/productQueries';
 
-export default function ProductCard({ product, ownProduct = false }) {
+export default function ProductCard({ product, ownProduct = false , onHomePage = false}) {
   const {
     id,
     title,
@@ -27,32 +27,45 @@ export default function ProductCard({ product, ownProduct = false }) {
     price,
     rentPrice,
     rentDuration,
-    viewCount,
     purchaseInfo,
     rentInfo,
+    viewCount,
     createdAt,
   } = product;
 
   const deleteBtn = useRef(null);
   const deleteModal = useRef(null);
+  const userId = JSON.parse(localStorage.getItem("userId"));
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const [deleteProduct, { loading, error }] = useMutation(DELETE_PRODUCT, {
+  const [deleteProductFromDB, { loading, error }] = useMutation(DELETE_PRODUCT, {
     variables: { id },
     update(cache, { data: { deleteProduct } }) {
-      const { products } = cache.readQuery({
-        query: GET_ALL_PRODUCTS,
+      const { productsByUserId } = cache.readQuery({
+        query: GET_PRODUCTS_BY_USER_ID,
+        variables : {
+          id: userId
+        }
       });
       cache.writeQuery({
+        query: GET_PRODUCTS_BY_USER_ID,
+        variables : {
+          id: userId
+        },
         data: {
-          products: products.filter(product => product.id !== deleteProduct.id),
+          productsByUserId: productsByUserId.filter(product =>{ 
+            console.log(product.id , deleteProduct.id)
+            return product.id !== deleteProduct.id
+          }),
         },
       });
     },
+    onCompleted: () => {
+      setDeleteModalOpen(false)
+    }
   });
 
-  if ((!purchaseInfo && !rentInfo) || ownProduct) {
     return (
       <Link
         to={!ownProduct ? `/product/${id}` : `/editProduct/${id}`}
@@ -80,15 +93,24 @@ export default function ProductCard({ product, ownProduct = false }) {
             }}
           >
             <Typography variant='h4'>{title}</Typography>
+            {/* ownProduct prop comes from My Products > Posted By Me */}
             {ownProduct ? (
               <IconButton
-                ref={deleteBtn}
-                onClick={() => {
-                  setDeleteModalOpen(true);
-                }}
+              ref={deleteBtn}
+              onClick={() => {
+                setDeleteModalOpen(true);
+              }}
               >
                 <BsFillTrashFill style={{ fontSize: '1.2em' }} />
               </IconButton>
+            ) : null}
+            {/* onHomePage is used to show product status */}
+            {onHomePage && (purchaseInfo || rentInfo) ? (
+              <Box sx={{ p:1 ,backgroundColor:"crimson" }}>
+                <Typography variant="body1" sx={{fontSize: ".875rem", color: "white"}}>
+                  {purchaseInfo ? "Sold" : "On Rent"}
+                </Typography>
+              </Box>
             ) : null}
             <Dialog
               ref={deleteModal}
@@ -115,7 +137,7 @@ export default function ProductCard({ product, ownProduct = false }) {
                   Go back
                 </Button>
                 <Button
-                  onClick={() => deleteProduct()}
+                  onClick={() => deleteProductFromDB()}
                   variant='contained'
                   color='error'
                   sx={{ minWidth: '90px' }}
@@ -167,6 +189,4 @@ export default function ProductCard({ product, ownProduct = false }) {
         </Box>
       </Link>
     );
-  }
-  return;
 }

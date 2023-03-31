@@ -2,12 +2,17 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const resolvers = {
+  // queries
   Query: {
     products: () => {
       return prisma.product.findMany({
         include: { purchaseInfo: true, postedByUser: true, rentInfo: true },
+        orderBy: [{
+          createdAt : 'desc'
+        }]
       });
     },
+    
     product: (_, { id }) => {
       return prisma.product.update({
         where: {
@@ -23,6 +28,7 @@ const resolvers = {
         },
       });
     },
+
     productsByUserId: (_, { id }) => {
       return prisma.product.findMany({
         where: {
@@ -33,8 +39,12 @@ const resolvers = {
           rentInfo: true,
           postedByUser: true,
         },
+        orderBy: [{
+          createdAt : 'desc'
+        }]
       });
     },
+
     lentProductsByUserId: (_, { id }) => {
       return prisma.rentedProduct.findMany({
         where: {
@@ -43,8 +53,14 @@ const resolvers = {
         include: {
           productDetails: true,
         },
+        orderBy : [{
+          productDetails:{
+            createdAt: 'desc'
+          }
+        }]
       });
     },
+
     borrowedProductsByUserId: (_, { id }) => {
       return prisma.rentedProduct.findMany({
         where: {
@@ -53,8 +69,14 @@ const resolvers = {
         include: {
           productDetails: true,
         },
+        orderBy : [{
+          productDetails:{
+            createdAt: 'desc'
+          }
+        }]
       });
     },
+
     soldProductsByUserId: (_, { id }) => {
       return prisma.soldProduct.findMany({
         where: {
@@ -63,8 +85,14 @@ const resolvers = {
         include: {
           productDetails: true,
         },
+        orderBy : [{
+          productDetails:{
+            createdAt: 'desc'
+          }
+        }]
       });
     },
+
     boughtProductsByUserId: (_, { id }) => {
       return prisma.soldProduct.findMany({
         where: {
@@ -73,20 +101,29 @@ const resolvers = {
         include: {
           productDetails: true,
         },
+        orderBy : [{
+          productDetails:{
+            createdAt: 'desc'
+          }
+        }]
       });
     },
+    // get all users
     users: () => {
       return prisma.user.findMany({ include: { postedProducts: true } });
     },
+    // get user by id
     user: (_, { id }) => {
-      return prisma.user.findUniqueOrThrow({
+      return prisma.user.findUnique({
         where: {
           id: id,
         },
       });
     },
   },
+  // mutations
   Mutation: {
+    // login user
     login: async (_, { email, password }) => {
       const user = await prisma.user.findUnique({
         where: {
@@ -98,6 +135,7 @@ const resolvers = {
       if (user.password !== password) throw new Error('Invalid password');
       return user;
     },
+    // create user
     createUser: (
       _,
       { firstName, lastName, address, email, phone, password }
