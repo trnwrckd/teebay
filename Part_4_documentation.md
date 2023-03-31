@@ -10,7 +10,10 @@
 
 ## Part 2
 
-- [x] Users can add and edit product (title, categories, description, price, rentPrice, rentDuration) -[ ] Multistep form -[x] Reusing same form component for both edit and create operations -[x] Delete products that a user owns (synced with InMemoryCache)
+- [x] Users can add and edit product (title, categories, description, price, rentPrice, rentDuration)
+- [ ] Multistep form
+- [x] Reusing same form component for both edit and create operations
+- [x] Delete products that a user owns (synced with InMemoryCache)
 
 ## Part 3
 
