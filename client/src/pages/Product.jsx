@@ -74,7 +74,10 @@ export default function Product() {
 
     return (
       <>
-        <Box sx={{ py: 2, mx: 'auto', width: '50%' }}>
+        <Box sx={{ p: 2, mx: 'auto', width: '50%' , border: "1px solid darkslategray"}}>
+          <Typography variant='body1' sx={{ mb: 1 , textAlign:"right"}}>
+            {`Posted By - ${postedByUser.firstName} ${postedByUser.lastName}`}
+          </Typography>
           <Typography variant='h4' sx={{ mb: 2 }}>
             {title}
           </Typography>
@@ -107,6 +110,17 @@ export default function Product() {
             </Typography>
             <Typography variant='body1'>{viewCount} views</Typography>
           </Box>
+          {/* show status if not available */}
+          {
+            (purchaseInfo || rentInfo) && postedByUser.id !== userId  ? (
+              <Box sx={{mt: 2, ml : "auto", width: "100px", p:1 ,backgroundColor:"crimson",borderRadius : "5px" }}>
+                <Typography variant="body1" sx={{textAlign:"center", fontSize: ".875rem", color: "white", fontWeight:600}}>
+                  {purchaseInfo ? "Sold" : "On Rent"}
+                </Typography>
+              </Box>
+            ) : null
+          }
+          {/* show buttons if available */}
           {!purchaseInfo && !rentInfo && postedByUser.id !== userId ? (
             <>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>

@@ -9,6 +9,7 @@ import {
   GET_LENT_PRODUCTS_BY_USER_ID,
   GET_BORROWED_PRODUCTS_BY_USER_ID,
 } from '../queries/productQueries';
+import {Link} from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 
 export default function MyProducts() {
@@ -28,7 +29,6 @@ export default function MyProducts() {
     if (tab === 'Sold') setQuery(GET_SOLD_PRODUCTS_BY_USER_ID);
     if (tab === 'Borrowed') setQuery(GET_BORROWED_PRODUCTS_BY_USER_ID);
     if (tab === 'Lent') setQuery(GET_LENT_PRODUCTS_BY_USER_ID);
-    // console.log(tab);
   }, [tab]);
 
   useEffect(() => {
@@ -42,7 +42,6 @@ export default function MyProducts() {
     }
   }, [data, tab]);
 
-  // console.log(data);
   return (
     <>
       {/* tabs */}
@@ -61,13 +60,16 @@ export default function MyProducts() {
         <Tab label='Borrowed' tab={tab} setTab={setTab} />
         <Tab label='Lent' tab={tab} setTab={setTab} />
       </Box>
+
       {/* products */}
       {loading ? (
         <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
           <CircularProgress />
         </Box>
       ) : null}
+
       {error ? <p>Error</p> : null}
+
       <Box sx={{ width: '50%', mx: 'auto', py: 2 }}>
         {!loading && !error && data && products.length > 0
           ? products.map(product =>
@@ -82,10 +84,21 @@ export default function MyProducts() {
             )
           : null}
         {!loading && !error && data && products.length === 0 ? (
-          <Typography variant='body1' sx={{ textAlign: 'center' }}>
+          <Box sx={{display: "flex", justifyContent : "center", flexDirection: "column", alignItems: "center"}}>
+            <Typography variant='h5' sx={{ textAlign: 'center' ,display:"block"}}>
             {' '}
             Nothing to show{' '}
           </Typography>
+          <Link 
+            style={{color: "inherit" , textDecoration: "none", display: "block"}}
+            to = {tab === "Posted By Me" || tab === "Sold" || tab === "Lent" ? "/createProduct" : "/"}>
+            <Box sx={{background: "#1976d2", borderRadius: "8px", p:1, mt: 1}}>
+              <Typography variant="h5" sx={{color: "white"}}>
+              {tab === "Posted By Me" || tab === "Sold" || tab === "Lent" ? "Add a product" : "Explore products"}
+              </Typography>
+              </Box>
+          </Link>
+            </Box>
         ) : null}
       </Box>
     </>

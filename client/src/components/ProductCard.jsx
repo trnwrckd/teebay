@@ -55,7 +55,6 @@ export default function ProductCard({ product, ownProduct = false , onHomePage =
         },
         data: {
           productsByUserId: productsByUserId.filter(product =>{ 
-            console.log(product.id , deleteProduct.id)
             return product.id !== deleteProduct.id
           }),
         },
@@ -69,6 +68,7 @@ export default function ProductCard({ product, ownProduct = false , onHomePage =
     return (
       <Link
         to={!ownProduct ? `/product/${id}` : `/editProduct/${id}`}
+        //  Link > Button caused event bubbling when clicked on button
         onClick={e => {
           if (deleteBtn.current && deleteBtn.current.contains(e.target)) {
             e.preventDefault();
@@ -92,7 +92,7 @@ export default function ProductCard({ product, ownProduct = false , onHomePage =
               alignItems: 'center',
             }}
           >
-            <Typography variant='h4'>{title}</Typography>
+            <Typography variant='h4' sx={{mb:1}}>{title}</Typography>
             {/* ownProduct prop comes from My Products > Posted By Me */}
             {ownProduct ? (
               <IconButton
@@ -106,12 +106,13 @@ export default function ProductCard({ product, ownProduct = false , onHomePage =
             ) : null}
             {/* onHomePage is used to show product status */}
             {onHomePage && (purchaseInfo || rentInfo) ? (
-              <Box sx={{ p:1 ,backgroundColor:"crimson" }}>
-                <Typography variant="body1" sx={{fontSize: ".875rem", color: "white"}}>
+              <Box sx={{ p:1 ,backgroundColor:"crimson",borderRadius : "5px" }}>
+                <Typography variant="body1" sx={{fontSize: ".875rem", color: "white", fontWeight:600}}>
                   {purchaseInfo ? "Sold" : "On Rent"}
                 </Typography>
               </Box>
             ) : null}
+            {/* Delete Modal */}
             <Dialog
               ref={deleteModal}
               open={deleteModalOpen}
@@ -152,17 +153,17 @@ export default function ProductCard({ product, ownProduct = false , onHomePage =
               </DialogActions>
             </Dialog>
           </Box>
-          <Typography variant='body1'>
+          <Typography variant='body1' sx={{mb:1}}>
             Categories: {categories ? categories.join(', ') : 'None'}
           </Typography>
-          <Typography variant='body1'>{`Price: $${price} | Rent: $${rentPrice} ${getRentDurationInString(
+          <Typography variant='body1' sx={{mb:1}}>{`Price: $${price} | Rent: $${rentPrice} ${getRentDurationInString(
             rentDuration
           )}`}</Typography>
-          <Typography variant='body1'>
+          <Typography variant='body1' sx={{mb:1}}>
             {description && description.length > 100 ? (
               <>
                 ${description.substr(0, 100)}
-                <span style={{ color: 'lightBlue' }}>... More Details</span>
+                <span style={{ color: '#1976d2' }}>{" ... More Details"}</span>
               </>
             ) : (
               description
