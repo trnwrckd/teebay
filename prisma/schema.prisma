@@ -46,7 +46,6 @@ model RentedProduct{
   productDetails Product ? @relation("rentInfo", fields: [productId], references: [id])
   productOwner String
   borrowedBy String
-  // rentDuration String
 }
 model SoldProduct{
   id String @id @default(uuid())
