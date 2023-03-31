@@ -11,6 +11,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  CircularProgress,
   MenuItem,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -78,8 +79,13 @@ export default function EditProduct() {
     }
   }, [data]);
 
-  if (loading) return <p>Loading</p>;
-  if (error) return <p>error</p>;
+  if (loading)
+    return (
+      <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    );
+  if (error) return <p>Something went wrong</p>;
 
   if (!loading && !error && data) {
     return (
@@ -193,6 +199,7 @@ export default function EditProduct() {
                   >
                     <MenuItem value={'hour'}>Per Hour</MenuItem>
                     <MenuItem value={'day'}> Per Day</MenuItem>
+                    <MenuItem value={'week'}> Per Week</MenuItem>
                     <MenuItem value={'month'}>Per Month</MenuItem>
                     <MenuItem value={'year'}>Per Year</MenuItem>
                   </Select>

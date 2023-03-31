@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import Tab from '../components/Tab';
 import { useQuery } from '@apollo/client';
 import {
@@ -62,24 +62,29 @@ export default function MyProducts() {
         <Tab label='Lent' tab={tab} setTab={setTab} />
       </Box>
       {/* products */}
-      {loading ? <p>Loading</p> : null}
-      {error ? <p>Error</p> : null}
-      {!loading && !error && data && products.length > 0
-        ? products.map(product =>
-            tab !== 'Posted By Me' && product.productDetails ? (
-              <ProductCard
-                key={product.productDetails.id}
-                product={product.productDetails}
-              />
-            ) : (
-              // <span>{product.id}</span>
-              <ProductCard key={product.id} product={product} ownProduct />
-            )
-          )
-        : null}
-      {!loading && !error && data && products.length === 0 ? (
-        <Typography variant='body1'> Nothing to show </Typography>
+      {loading ? (
+        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
       ) : null}
+      {error ? <p>Error</p> : null}
+      <Box sx={{ width: '50%', mx: 'auto', py: 2 }}>
+        {!loading && !error && data && products.length > 0
+          ? products.map(product =>
+              tab !== 'Posted By Me' && product.productDetails ? (
+                <ProductCard
+                  key={product.productDetails.id}
+                  product={product.productDetails}
+                />
+              ) : (
+                <ProductCard key={product.id} product={product} ownProduct />
+              )
+            )
+          : null}
+        {!loading && !error && data && products.length === 0 ? (
+          <Typography variant='body1'> Nothing to show </Typography>
+        ) : null}
+      </Box>
     </>
   );
 }

@@ -1,7 +1,13 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN } from '../mutations/userMutations';
@@ -74,7 +80,11 @@ export default function Login({ setUser }) {
           </form>
         </Box>
       </Box>
-      {loading && <p>Loading</p>}
+      {loading && (
+        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+      )}
       {error && <p>Incorrect Credentials</p>}
     </>
   );

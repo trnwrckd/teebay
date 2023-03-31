@@ -8,12 +8,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  CircularProgress,
   Button,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { useMutation } from '@apollo/client';
 import { DELETE_PRODUCT } from '../mutations/productMutations';
+import { getRentDurationInString } from '../utils/getRentDurationInString';
 
 export default function ProductCard({ product, ownProduct = false }) {
   const {
@@ -22,6 +24,8 @@ export default function ProductCard({ product, ownProduct = false }) {
     categories,
     description,
     price,
+    rentPrice,
+    rentDuration,
     viewCount,
     purchaseInfo,
     rentInfo,
@@ -33,12 +37,9 @@ export default function ProductCard({ product, ownProduct = false }) {
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const [deleteProduct, { loading, error, data }] = useMutation(
-    DELETE_PRODUCT,
-    {
-      variables: { id },
-    }
-  );
+  const [deleteProduct, { loading, error }] = useMutation(DELETE_PRODUCT, {
+    variables: { id },
+  });
 
   if ((!purchaseInfo && !rentInfo) || ownProduct) {
     return (
@@ -59,7 +60,7 @@ export default function ProductCard({ product, ownProduct = false }) {
         }}
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
-        <Box sx={{ p: 3, border: '1px solid lightgrey' }}>
+        <Box sx={{ p: 3, my: 2, border: '1px solid darkslategrey' }}>
           <Box
             sx={{
               display: 'flex',
@@ -98,13 +99,25 @@ export default function ProductCard({ product, ownProduct = false }) {
                   Go back
                 </Button>
                 <Button onClick={() => deleteProduct()}>Delete</Button>
+                {loading ? (
+                  <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress />
+                  </Box>
+                ) : null}
+                {error ? (
+                  <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+                    <p>Something went wrong</p>
+                  </Box>
+                ) : null}
               </DialogActions>
             </Dialog>
           </Box>
           <Typography variant='body1'>
             Categories: {categories ? categories.join(', ') : 'None'}
           </Typography>
-          <Typography variant='body1'>Price: ${price}</Typography>
+          <Typography variant='body1'>{`Price: $${price} | Rent: $${rentPrice} ${getRentDurationInString(
+            rentDuration
+          )}`}</Typography>
           <Typography variant='body1'>
             {description && description.length > 100 ? (
               <>
@@ -122,7 +135,15 @@ export default function ProductCard({ product, ownProduct = false }) {
               justifyContent: 'space-between',
             }}
           >
-            <Typography variant='body1'>Date Posted: {createdAt} </Typography>
+            <Typography variant='body1'>
+              Date Posted:{' '}
+              {new Date(createdAt || new Date())
+                .toISOString()
+                .replace(/T.*/, '')
+                .split('-')
+                .reverse()
+                .join('-')}{' '}
+            </Typography>
             <Typography variant='body1'>{viewCount} views</Typography>
           </Box>
         </Box>

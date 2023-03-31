@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { Link } from 'react-router-dom';
 import {
   Box,
+  CircularProgress,
   Button,
   TextField,
   Typography,
@@ -227,8 +228,12 @@ export default function Register({ setUser }) {
           </form>
         </Box>
       </Box>
-      {loading && <p>Loading</p>}
-      {error && <p>Incorrect Credentials</p>}
+      {loading && (
+        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+      )}
+      {error && <p>Something went wrong</p>}
     </>
   );
 }

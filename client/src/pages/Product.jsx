@@ -11,10 +11,16 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
+  CircularProgress,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { useMutation } from '@apollo/client';
 import { PURCHASE_PRODUCT, RENT_PRODUCT } from '../mutations/productMutations';
+import { getRentDurationInString } from '../utils/getRentDurationInString';
+import dayjs from 'dayjs';
 
 export default function Product() {
   const { id } = useParams();
@@ -29,7 +35,12 @@ export default function Product() {
   const [purchaseProduct] = useMutation(PURCHASE_PRODUCT);
   const [rentProduct] = useMutation(RENT_PRODUCT);
 
-  if (loading) return <p>Loading</p>;
+  if (loading)
+    return (
+      <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    );
   if (error) return <p>return</p>;
 
   if (!loading && !error && data) {
@@ -42,18 +53,28 @@ export default function Product() {
       viewCount,
       purchaseInfo,
       rentInfo,
+      rentPrice,
+      rentDuration,
       postedByUser,
     } = data.product;
 
     return (
       <>
-        <Box>
-          <Typography variant='h4'>{title}</Typography>
-          <Typography variant='body1'>
+        <Box sx={{ py: 2, mx: 'auto', width: '50%' }}>
+          <Typography variant='h4' sx={{ mb: 2 }}>
+            {title}
+          </Typography>
+          <Typography variant='body1' sx={{ mb: 1 }}>
             Categories: {categories ? categories.join(', ') : 'None'}
           </Typography>
-          <Typography variant='body1'>Price: ${price}</Typography>
-          <Typography variant='body1'>{description}</Typography>
+          <Typography variant='body1' sx={{ mb: 1 }}>
+            {`Price: $${price} | Rent: $${rentPrice} ${getRentDurationInString(
+              rentDuration
+            )}`}
+          </Typography>
+          <Typography variant='body1' sx={{ mb: 1 }}>
+            {description}
+          </Typography>
           <Box
             sx={{
               display: 'flex',
@@ -61,17 +82,31 @@ export default function Product() {
               justifyContent: 'space-between',
             }}
           >
-            <Typography variant='body1'>Date Posted: {createdAt} </Typography>
+            <Typography variant='body1'>
+              Date Posted:{' '}
+              {new Date(createdAt || new Date())
+                .toISOString()
+                .replace(/T.*/, '')
+                .split('-')
+                .reverse()
+                .join('-')}{' '}
+            </Typography>
             <Typography variant='body1'>{viewCount} views</Typography>
           </Box>
           {!purchaseInfo && !rentInfo && postedByUser.id !== userId ? (
             <>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant='primary' onClick={() => setBuyModalOpen(true)}>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', my: 2 }}>
+                <Button
+                  variant='contained'
+                  color='success'
+                  onClick={() => setBuyModalOpen(true)}
+                >
                   Buy
                 </Button>
                 <Button
-                  variant='secondary'
+                  sx={{ ml: 2 }}
+                  variant='contained'
+                  color='error'
                   onClick={() => setRentModalOpen(true)}
                 >
                   Rent
@@ -88,8 +123,16 @@ export default function Product() {
                   Are you sure you want to buy this product?
                 </DialogTitle>
                 <DialogActions>
-                  <Button onClick={() => setBuyModalOpen(false)}>No</Button>
                   <Button
+                    onClick={() => setBuyModalOpen(false)}
+                    variant='contained'
+                    color='error'
+                  >
+                    No
+                  </Button>
+                  <Button
+                    variant='contained'
+                    color='success'
                     onClick={() =>
                       purchaseProduct({
                         variables: {
@@ -114,20 +157,35 @@ export default function Product() {
                 onClose={() => setRentModalOpen(false)}
                 aria-labelledby='alert-dialog-title'
                 aria-describedby='alert-dialog-description'
+                sx={{ py: 3, px: 2 }}
               >
-                <DialogTitle id='alert-dialog-title'>
-                  Are you sure you want to buy this product?
-                </DialogTitle>
+                <DialogTitle id='alert-dialog-title'>Rental Period</DialogTitle>
                 <DialogContent>
-                  <DialogContentText id='alert-dialog-description'>
-                    This action is irreversible.
+                  <DialogContentText
+                    id='alert-dialog-description'
+                    sx={{ pt: 2 }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label='From'
+                        defaultValue={dayjs(new Date())}
+                        sx={{ mr: 2 }}
+                      />
+                      <DatePicker label='To' />
+                    </LocalizationProvider>
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={() => setRentModalOpen(false)}>
+                  <Button
+                    onClick={() => setRentModalOpen(false)}
+                    variant='contained'
+                    color='error'
+                  >
                     Go Back
                   </Button>
                   <Button
+                    variant='contained'
+                    color='success'
                     onClick={() =>
                       rentProduct({
                         variables: {
