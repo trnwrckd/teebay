@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_PRODUCT_BY_ID } from '../queries/productQueries';
+import { GET_PRODUCT_BY_ID, GET_ALL_PRODUCTS } from '../queries/productQueries';
 import {
   Box,
   Typography,
@@ -32,8 +32,22 @@ export default function Product() {
   const [buyModalOpen, setBuyModalOpen] = useState(false);
   const [rentModalOpen, setRentModalOpen] = useState(false);
 
-  const [purchaseProduct] = useMutation(PURCHASE_PRODUCT);
-  const [rentProduct] = useMutation(RENT_PRODUCT);
+  const [purchaseProduct, { loading: purchasing, error: purchaseError }] =
+    useMutation(PURCHASE_PRODUCT, {
+      refetchQueries: [
+        { query: GET_PRODUCT_BY_ID, variables: { id } },
+        { query: GET_ALL_PRODUCTS },
+      ],
+    });
+  const [rentProduct, { loading: renting, error: rentError }] = useMutation(
+    RENT_PRODUCT,
+    {
+      refetchQueries: [
+        { query: GET_PRODUCT_BY_ID, variables: { id } },
+        { query: GET_ALL_PRODUCTS },
+      ],
+    }
+  );
 
   if (loading)
     return (
@@ -133,6 +147,7 @@ export default function Product() {
                   <Button
                     variant='contained'
                     color='success'
+                    sx={{ minWidth: '90px' }}
                     onClick={() =>
                       purchaseProduct({
                         variables: {
@@ -147,8 +162,11 @@ export default function Product() {
                     }
                     autoFocus
                   >
-                    Yes
+                    {purchasing ? <CircularProgress size='1.5em' /> : 'Yes'}
                   </Button>
+                  {purchaseError ? (
+                    <p style={{ textAlign: 'center' }}>Something went wrong</p>
+                  ) : null}
                 </DialogActions>
               </Dialog>
               {/* rent modal */}
@@ -186,6 +204,7 @@ export default function Product() {
                   <Button
                     variant='contained'
                     color='success'
+                    sx={{ minWidth: '90px' }}
                     onClick={() =>
                       rentProduct({
                         variables: {
@@ -200,8 +219,15 @@ export default function Product() {
                     }
                     autoFocus
                   >
-                    Confirm Rent
+                    {renting ? (
+                      <CircularProgress size='1.5em' />
+                    ) : (
+                      'Confirm Rent'
+                    )}
                   </Button>
+                  {rentError ? (
+                    <p style={{ textAlign: 'center' }}>Something went wrong</p>
+                  ) : null}
                 </DialogActions>
               </Dialog>
             </>

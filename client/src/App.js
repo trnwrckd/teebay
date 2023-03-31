@@ -16,9 +16,23 @@ function App() {
   const userFromLocalStorage = JSON.parse(localStorage.getItem('userId'));
   const [user, setUser] = useState(userFromLocalStorage);
 
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          products: {
+            merge(existing, incoming) {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
+  });
+
   const client = new ApolloClient({
     uri: 'http://localhost:5000/graphql',
-    cache: new InMemoryCache(),
+    cache: cache,
   });
 
   useEffect(() => {

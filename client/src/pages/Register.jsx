@@ -233,7 +233,11 @@ export default function Register({ setUser }) {
           <CircularProgress />
         </Box>
       )}
-      {error && <p>Something went wrong</p>}
+      {error && (
+        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+          <p style={{ color: 'crimson' }}>Something went wrong</p>
+        </Box>
+      )}
     </>
   );
 }

@@ -16,6 +16,7 @@ import { BsFillTrashFill } from 'react-icons/bs';
 import { useMutation } from '@apollo/client';
 import { DELETE_PRODUCT } from '../mutations/productMutations';
 import { getRentDurationInString } from '../utils/getRentDurationInString';
+import { GET_ALL_PRODUCTS } from '../queries/productQueries';
 
 export default function ProductCard({ product, ownProduct = false }) {
   const {
@@ -39,6 +40,16 @@ export default function ProductCard({ product, ownProduct = false }) {
 
   const [deleteProduct, { loading, error }] = useMutation(DELETE_PRODUCT, {
     variables: { id },
+    update(cache, { data: { deleteProduct } }) {
+      const { products } = cache.readQuery({
+        query: GET_ALL_PRODUCTS,
+      });
+      cache.writeQuery({
+        data: {
+          products: products.filter(product => product.id !== deleteProduct.id),
+        },
+      });
+    },
   });
 
   if ((!purchaseInfo && !rentInfo) || ownProduct) {
@@ -95,15 +106,22 @@ export default function ProductCard({ product, ownProduct = false }) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setDeleteModalOpen(false)} autoFocus>
+                <Button
+                  onClick={() => setDeleteModalOpen(false)}
+                  variant='contained'
+                  color='primary'
+                  autoFocus
+                >
                   Go back
                 </Button>
-                <Button onClick={() => deleteProduct()}>Delete</Button>
-                {loading ? (
-                  <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
-                    <CircularProgress />
-                  </Box>
-                ) : null}
+                <Button
+                  onClick={() => deleteProduct()}
+                  variant='contained'
+                  color='error'
+                  sx={{ minWidth: '90px' }}
+                >
+                  {loading ? <CircularProgress size='1.5em' /> : 'Delete'}
+                </Button>
                 {error ? (
                   <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
                     <p>Something went wrong</p>

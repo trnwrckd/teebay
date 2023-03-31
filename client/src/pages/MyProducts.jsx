@@ -82,7 +82,10 @@ export default function MyProducts() {
             )
           : null}
         {!loading && !error && data && products.length === 0 ? (
-          <Typography variant='body1'> Nothing to show </Typography>
+          <Typography variant='body1' sx={{ textAlign: 'center' }}>
+            {' '}
+            Nothing to show{' '}
+          </Typography>
         ) : null}
       </Box>
     </>

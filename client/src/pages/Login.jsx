@@ -85,7 +85,11 @@ export default function Login({ setUser }) {
           <CircularProgress />
         </Box>
       )}
-      {error && <p>Incorrect Credentials</p>}
+      {error && (
+        <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+          <p style={{ color: 'crimson' }}>Incorrect Credentials</p>
+        </Box>
+      )}
     </>
   );
 }

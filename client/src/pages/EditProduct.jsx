@@ -17,7 +17,7 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { productSchema } from '../validators';
 import { useMutation } from '@apollo/client';
-import { GET_PRODUCT_BY_ID } from '../queries/productQueries';
+import { GET_ALL_PRODUCTS, GET_PRODUCT_BY_ID } from '../queries/productQueries';
 import { UPDATE_PRODUCT } from '../mutations/productMutations';
 
 const productCategories = [
@@ -36,7 +36,13 @@ export default function EditProduct() {
     variables: { id },
   });
 
-  const [updateProduct] = useMutation(UPDATE_PRODUCT);
+  const [updateProduct, { loading: updating, error: updateError }] =
+    useMutation(UPDATE_PRODUCT, {
+      refetchQueries: [
+        { query: GET_PRODUCT_BY_ID, variables: { id } },
+        { query: GET_ALL_PRODUCTS },
+      ],
+    });
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -207,9 +213,15 @@ export default function EditProduct() {
               </Grid>
             </Grid>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-              <Button color='primary' variant='contained' type='submit'>
-                Submit
+              <Button
+                color='primary'
+                variant='contained'
+                type='submit'
+                sx={{ minWidth: '90px' }}
+              >
+                {updating ? <CircularProgress size='1.5em' /> : 'Submit'}
               </Button>
+              {updateError ? <p>Something went wrong</p> : null}
             </Box>
           </form>
         </Box>
