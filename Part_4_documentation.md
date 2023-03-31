@@ -11,7 +11,7 @@
 ## Part 2
 
 - [x] Users can add and edit product (title, categories, description, price, rentPrice, rentDuration)
-- [ ] Multistep form
+- [ ] Multistep product create form
 - [x] Reusing same form component for both edit and create operations
 - [x] Delete products that a user owns (synced with InMemoryCache)
 
@@ -27,51 +27,59 @@
 
 #### Product
 
-`model Product {
-  id UUID 
-  title String 
+```
+model Product {
+  id UUID
+  title String
   categories String[]
   description String
   price Int
   rentPrice Int
   rentDuration String
-  viewCount Int 
-  createdAt DateTime 
-  purchaseInfo SoldProduct 
-  rentInfo RentedProduct 
-  postedByUser User 
+  viewCount Int
+  createdAt DateTime
+  purchaseInfo SoldProduct
+  rentInfo RentedProduct
+  postedByUser User
   postedBy String
-}`
+}
+```
 
 #### User
 
-`model User {
-  id UUID 
+```
+model User {
+  id UUID
   firstName String
-  lastName String 
+  lastName String
   address String
-  email String 
+  email String
   phone String
   password String
-  postedProducts Product[] 
-}`
+  postedProducts Product[]
+}
+```
 
 #### RentedProduct
 
-`model RentedProduct{
-  id UUID 
-  productId String 
+```
+model RentedProduct{
+  id UUID
+  productId String
   productDetails Product
   productOwner String
   borrowedBy String
-}`
+}
+```
 
 #### SoldProduct
 
-`model SoldProduct{
+```
+model SoldProduct{
   id UUID
-  productId String 
-  productDetails Product 
+  productId String
+  productDetails Product
   productOwner String
   boughtBy String
-}`
+}
+```
