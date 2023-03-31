@@ -3,16 +3,22 @@
 #### Registration
 
 - [x] Users can register using firstName, lastName, address, email, phone and password
-      ####Login
+
+#### Login
+
 - [x] Users can login using email and password. Simple string matching against DB
 
 ## Part 2
 
--[x] Users can add and edit product (title, categories, description, price, rentPrice, rentDuration) -[ ] Multistep form -[x] Reusing same form component for both edit and create operations -[x] Delete products that a user owns (synced with InMemoryCache)
+- [x] Users can add and edit product (title, categories, description, price, rentPrice, rentDuration) -[ ] Multistep form -[x] Reusing same form component for both edit and create operations -[x] Delete products that a user owns (synced with InMemoryCache)
 
 ## Part 3
 
--[x] List all products created by all users (Inside MyProducts > Posted By Me) -[x] Increment viewCount when product is viewed -[x] Buy product -[x] Rent product -[x] Display all the products bought/sold/lent/borrowed by user (Inside MyProducts)
+- [x] List all products created by all users (Inside MyProducts > Posted By Me)
+- [x] Increment viewCount when product is viewed
+- [x] Buy product
+- [x] Rent product
+- [x] Display all the products bought/sold/lent/borrowed by user (Inside MyProducts)
 
 ## Database Models
 
